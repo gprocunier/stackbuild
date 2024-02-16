@@ -1,0 +1,57 @@
+eat_template_version: wallaby
+description: Generic Server Build Template v1.0 - for pre-existing disks/networks
+
+parameters:
+  config_data:
+    type: json
+    default: {}
+
+resources:
+  vmPrimaryNic:
+    type: OS::Neutron::Port
+    properties:
+      network_id:
+        get_param: [ config_data, primaryNicNetwork ]
+      fixed_ips:
+        get_param: [ config_data, primaryNicNetworkIp ]
+      mac_address:
+        get_param: [ config_data, primaryNicMacAddress ]
+      security_groups:
+        get_param: [ config_data, primaryNicSecurityGroups ]
+
+  nodeConfig:
+    type: OS::Heat::SoftwareConfig
+    properties:
+      group: ungrouped
+      inputs: []
+      outputs:
+        - name: deployment-output
+      config: {}
+
+  configInjection:
+    type: OS::Heat::MultipartMime
+    depends_on: nodeConfig
+    properties:
+      parts:
+        - config:
+            get_resource: nodeConfig
+
+  vm:
+    type: OS::Nova::Server
+    depends_on:
+      - vmPrimaryNic
+      - configInjection
+    properties:
+      name:
+        get_param: [ config_data, guestName ]
+      block_device_mapping_v2:
+        get_param: [ config_data, volumes ]
+      flavor:
+        get_param: [ config_data, flavor ]
+      key_name:
+        get_param: [ config_data, ssh_keypair ]
+      networks:
+        - port: { get_resource: vmPrimaryNic }
+      user_data_format: SOFTWARE_CONFIG
+      user_data:
+        get_resource: configInjection
