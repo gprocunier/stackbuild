@@ -1,0 +1,25 @@
+parameter_defaults:
+  config_data:
+
+    guestName: "testvm"  
+    flavor: m1.medium
+    sshKeypair: 'bench-key'
+    volumes:
+      - volume_id: 97523e76-44e5-49c2-8e11-d0c259fe58c4
+        delete_on_termination: false
+        boot_index: 0
+      - volume_id: b672e940-57f0-499a-8b46-c21841c9c457
+        delete_on_termination: false
+        boot_index: -1
+      - volume_id: 05a3e07b-8f0a-4b8e-be01-6ac9db3aa356
+        delete_on_termination: false
+        boot_index: -1
+
+    primaryNicNetwork: 6479190b-dd89-4690-9901-e71944aef43a
+    primaryNicMacAddress: 'AA:BB:CC:DD:EE:FF'
+    primaryNicNetworkIp:
+      - ip_address: 1.2.3.4
+    primaryNicNetworkSubnets:
+      - subnet_id: 268e6838-ea87-4957-889f-1396d4b52f1b
+    primaryNicSecurityGroups:
+      - ddb3e8e6-d646-47b4-af61-324e724b7346
