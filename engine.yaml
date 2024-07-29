@@ -1,4 +1,4 @@
-eat_template_version: wallaby
+heat_template_version: wallaby
 description: Generic Server Build Template v1.0 - for pre-existing disks/networks
 
 parameters:
